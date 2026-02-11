@@ -6,6 +6,7 @@ import org.mapstruct.factory.Mappers;
 
 import edu.alumno.patryk.proyecto_futbol.model.db.JugadorDb;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorEdit;
+import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorInfo;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorList;
 
 @Mapper
@@ -18,6 +19,10 @@ public interface JugadorMapper {
     JugadorEdit jugadorDbToJugadorEdit(JugadorDb JugadorDb);
 
     JugadorList jugadorDbToJugadorList(JugadorDb JugadorDb);
+
+    JugadorDb jugadorInfoToJugadorDb(JugadorInfo JugadorInfo);
+
+    JugadorInfo jugadorDbToJugadorInfo(JugadorDb JugadorDb);
 
     List<JugadorList> jugadoresDbToJugadorList(List<JugadorDb> jugadoresDb);
 

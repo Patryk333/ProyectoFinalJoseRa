@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ProyectoFutbolApplication<proyecto_futbol>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "edu.alumno.patryk.proyecto_futbol.ProyectoFutbolApplication",
+            "projectName": "proyecto_futbol",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

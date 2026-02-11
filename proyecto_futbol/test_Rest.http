@@ -1,0 +1,195 @@
+### 1. PRUEBA EXITOSA - Crear jugador válido (200)
+POST http://localhost:8090/api/futbol/jugadores/crear 
+Content-Type: application/json
+
+{
+    "nombre": "Juan Domingo",
+    "dorsal": 33,
+    "posicion": "Delantero",
+    "nacionalidad": "Español",
+    "fechaNacimiento": "19/06/2000",
+    "idEquipo": 1
+}
+
+### 2. ERROR 400 - Datos inválidos: dorsal fuera de rango (mayor a 99)
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": "Juan Pérez",
+    "dorsal": 150,
+    "posicion": "Portero",
+    "nacionalidad": "Español",
+    "fechaNacimiento": "10/05/1995",
+    "idEquipo": 1
+}
+
+### 3. ERROR 400 - Datos inválidos: dorsal menor que 1
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": "Carlos López",
+    "dorsal": 0,
+    "posicion": "Defensa",
+    "nacionalidad": "Español",
+    "fechaNacimiento": "15/08/1998",
+    "idEquipo": 1
+}
+
+### 4. ERROR 422 - Campo requerido vacío: nombre nulo
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": null,
+    "dorsal": 10,
+    "posicion": "Centrocampista",
+    "nacionalidad": "Español",
+    "fechaNacimiento": "20/03/2001",
+    "idEquipo": 1
+}
+
+### 5. ERROR 422 - Campo requerido faltante: posición
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": "David García",
+    "dorsal": 7,
+    "nacionalidad": "Español",
+    "fechaNacimiento": "25/11/1999",
+    "idEquipo": 1
+}
+
+### 6. ERROR 422 - Campo requerido faltante: nacionalidad
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": "Rafael Martín",
+    "dorsal": 22,
+    "posicion": "Delantero",
+    "fechaNacimiento": "30/07/1997",
+    "idEquipo": 1
+}
+
+### 7. ERROR 422 - Campo requerido faltante: fechaNacimiento
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": "Antonio López",
+    "dorsal": 5,
+    "posicion": "Defensa",
+    "nacionalidad": "Español",
+    "idEquipo": 1
+}
+
+### 8. ERROR 422 - Campo requerido faltante: idEquipo
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": "Miguel Rodríguez",
+    "dorsal": 18,
+    "posicion": "Centrocampista",
+    "nacionalidad": "Español",
+    "fechaNacimiento": "12/04/1996"
+}
+
+### 9. ERROR 409 - Violación de restricción de integridad: idEquipo inválido (menor o igual a 0)
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": "Pedro González",
+    "dorsal": 15,
+    "posicion": "Centrocampista",
+    "nacionalidad": "Español",
+    "fechaNacimiento": "08/02/1999",
+    "idEquipo": 0
+}
+
+### 10. ERROR 409 - Violación de restricción de integridad: idEquipo negativo
+POST http://localhost:8090/api/futbol/jugadores/crear
+Content-Type: application/json
+
+{
+    "nombre": "Sergio Fernández",
+    "dorsal": 11,
+    "posicion": "Delantero",
+    "nacionalidad": "Español",
+    "fechaNacimiento": "22/09/2000",
+    "idEquipo": -1
+}
+
+### 11. ÉXITO - Obtener todos los jugadores (200)
+GET http://localhost:8090/api/futbol/jugadores
+
+### 12. ERROR 404 - Obtener jugador que no existe
+GET http://localhost:8090/api/futbol/jugadores/999
+
+### 13. ÉXITO - Buscar jugador por nombre (200)
+GET http://localhost:8090/api/futbol/jugadores/buscar/nombre?nombre=Marvel
+
+### 14. ÉXITO - Buscar jugador (resultados vacíos si no existe) (200)
+GET http://localhost:8090/api/futbol/jugadores/buscar/nombre?nombre=NoExiste
+
+### 15. ERROR 404 - Actualizar jugador que no existe
+PUT http://localhost:8090/api/futbol/jugadores/999
+Content-Type: application/json
+
+{
+    "nombre": "Nombre Actualizado",
+    "dorsal": 45,
+    "posicion": "Delantero",
+    "nacionalidad": "Português",
+    "fechaNacimiento": "01/01/1990",
+    "idEquipo": 2
+}
+
+### 16. ERROR 400 - Actualizar con datos inválidos: dorsal > 99
+PUT http://localhost:8090/api/futbol/jugadores/1
+Content-Type: application/json
+
+{
+    "nombre": "Nombre Actualizado",
+    "dorsal": 250,
+    "posicion": "Delantero",
+    "nacionalidad": "Português",
+    "fechaNacimiento": "01/01/1990",
+    "idEquipo": 2
+}
+
+### 17. ERROR 409 - Actualizar con violación de integridad: idEquipo inválido
+PUT http://localhost:8090/api/futbol/jugadores/1
+Content-Type: application/json
+
+{
+    "nombre": "Marvel Dreamer Actualizado",
+    "dorsal": 99,
+    "posicion": "Centrocampista",
+    "nacionalidad": "Portugués",
+    "fechaNacimiento": "19/06/2000",
+    "idEquipo": -5
+}
+
+### 18. ÉXITO - Actualizar jugador existente (200)
+PUT http://localhost:8090/api/futbol/jugadores/1
+Content-Type: application/json
+
+{
+    "nombre": "Marvel Dreamer Actualizado",
+    "dorsal": 99,
+    "posicion": "Centrocampista",
+    "nacionalidad": "Portugués",
+    "fechaNacimiento": "19/06/2000",
+    "idEquipo": 1
+}
+
+### 19. ERROR 404 - Eliminar jugador que no existe
+DELETE http://localhost:8090/api/futbol/jugadores/999
+
+### 20. ÉXITO - Eliminar jugador existente (204)
+DELETE http://localhost:8090/api/futbol/jugadores/1

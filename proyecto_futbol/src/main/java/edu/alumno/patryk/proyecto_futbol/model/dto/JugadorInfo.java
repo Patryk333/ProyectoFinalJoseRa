@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class JugadorEdit {
+public class JugadorInfo {
     private Long id;
     @NotNull(message = "El nombre no puede estar vacio")
     private String nombre;
