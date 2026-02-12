@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import edu.alumno.patryk.proyecto_futbol.exception.CustomErrorResponse;
+import edu.alumno.patryk.proyecto_futbol.exception.FiltroException;
 import edu.alumno.patryk.proyecto_futbol.exception.IntegrityConstraintViolationException;
 import edu.alumno.patryk.proyecto_futbol.exception.InvalidEntityException;
 import edu.alumno.patryk.proyecto_futbol.exception.JugadorNotFoundException;
@@ -39,6 +40,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CustomErrorResponse> handleIntegrityConstraintViolationException(IntegrityConstraintViolationException ex) {
         CustomErrorResponse response = new CustomErrorResponse(ex.getErrorCode(), ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(FiltroException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, Object>> handleFiltroException(FiltroException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("errorCode", ex.getErrorCode());
+        errorResponse.put("message", ex.getMessage());
+        errorResponse.put("details", ex.getDetailedMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler(DataIntegrityViolationException.class)

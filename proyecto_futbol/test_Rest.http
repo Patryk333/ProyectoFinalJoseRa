@@ -1,5 +1,15 @@
-### 1. PRUEBA EXITOSA - Crear jugador válido (200)
-POST http://localhost:8090/api/futbol/jugadores/crear 
+### ========================================
+### PROYECTO FÚTBOL - API REST
+### ========================================
+### Base URL
+@baseUrl = http://localhost:8090/api/futbol
+
+### ========================================
+### JUGADORES - CRUD
+### ========================================
+
+### 1. CREAR JUGADOR - Éxito
+POST {{baseUrl}}/jugadores/crear 
 Content-Type: application/json
 
 {
@@ -11,8 +21,8 @@ Content-Type: application/json
     "idEquipo": 1
 }
 
-### 2. ERROR 400 - Datos inválidos: dorsal fuera de rango (mayor a 99)
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 2. CREAR JUGADOR - Error 400: Dorsal fuera de rango (mayor a 99)
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -24,8 +34,8 @@ Content-Type: application/json
     "idEquipo": 1
 }
 
-### 3. ERROR 400 - Datos inválidos: dorsal menor que 1
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 3. CREAR JUGADOR - Error 400: Dorsal menor que 1
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -37,8 +47,8 @@ Content-Type: application/json
     "idEquipo": 1
 }
 
-### 4. ERROR 422 - Campo requerido vacío: nombre nulo
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 4. CREAR JUGADOR - Error 422: Campo nombre nulo
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -50,8 +60,8 @@ Content-Type: application/json
     "idEquipo": 1
 }
 
-### 5. ERROR 422 - Campo requerido faltante: posición
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 5. CREAR JUGADOR - Error 422: Campo posición faltante
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -62,8 +72,8 @@ Content-Type: application/json
     "idEquipo": 1
 }
 
-### 6. ERROR 422 - Campo requerido faltante: nacionalidad
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 6. CREAR JUGADOR - Error 422: Campo nacionalidad faltante
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -74,8 +84,8 @@ Content-Type: application/json
     "idEquipo": 1
 }
 
-### 7. ERROR 422 - Campo requerido faltante: fechaNacimiento
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 7. CREAR JUGADOR - Error 422: Campo fechaNacimiento faltante
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -86,8 +96,8 @@ Content-Type: application/json
     "idEquipo": 1
 }
 
-### 8. ERROR 422 - Campo requerido faltante: idEquipo
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 8. CREAR JUGADOR - Error 422: Campo idEquipo faltante
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -98,8 +108,8 @@ Content-Type: application/json
     "fechaNacimiento": "12/04/1996"
 }
 
-### 9. ERROR 409 - Violación de restricción de integridad: idEquipo inválido (menor o igual a 0)
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 9. CREAR JUGADOR - Error 409: idEquipo inválido (0)
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -111,8 +121,8 @@ Content-Type: application/json
     "idEquipo": 0
 }
 
-### 10. ERROR 409 - Violación de restricción de integridad: idEquipo negativo
-POST http://localhost:8090/api/futbol/jugadores/crear
+### 10. CREAR JUGADOR - Error 409: idEquipo negativo
+POST {{baseUrl}}/jugadores/crear
 Content-Type: application/json
 
 {
@@ -124,20 +134,20 @@ Content-Type: application/json
     "idEquipo": -1
 }
 
-### 11. ÉXITO - Obtener todos los jugadores (200)
-GET http://localhost:8090/api/futbol/jugadores
+### 11. LEER JUGADORES - Obtener todos
+GET {{baseUrl}}/jugadores
 
-### 12. ERROR 404 - Obtener jugador que no existe
-GET http://localhost:8090/api/futbol/jugadores/999
+### 12. LEER JUGADOR - Error 404: No existe
+GET {{baseUrl}}/jugadores/999
 
-### 13. ÉXITO - Buscar jugador por nombre (200)
-GET http://localhost:8090/api/futbol/jugadores/buscar/nombre?nombre=Marvel
+### 13. BUSCAR JUGADOR - Por nombre
+GET {{baseUrl}}/jugadores/buscar/nombre?nombre=Marvel
 
-### 14. ÉXITO - Buscar jugador (resultados vacíos si no existe) (200)
-GET http://localhost:8090/api/futbol/jugadores/buscar/nombre?nombre=NoExiste
+### 14. BUSCAR JUGADOR - Sin resultados
+GET {{baseUrl}}/jugadores/buscar/nombre?nombre=NoExiste
 
-### 15. ERROR 404 - Actualizar jugador que no existe
-PUT http://localhost:8090/api/futbol/jugadores/999
+### 15. ACTUALIZAR JUGADOR - Error 404: No existe
+PUT {{baseUrl}}/jugadores/999
 Content-Type: application/json
 
 {
@@ -149,8 +159,8 @@ Content-Type: application/json
     "idEquipo": 2
 }
 
-### 16. ERROR 400 - Actualizar con datos inválidos: dorsal > 99
-PUT http://localhost:8090/api/futbol/jugadores/1
+### 16. ACTUALIZAR JUGADOR - Error 400: Dorsal inválido
+PUT {{baseUrl}}/jugadores/1
 Content-Type: application/json
 
 {
@@ -162,8 +172,8 @@ Content-Type: application/json
     "idEquipo": 2
 }
 
-### 17. ERROR 409 - Actualizar con violación de integridad: idEquipo inválido
-PUT http://localhost:8090/api/futbol/jugadores/1
+### 17. ACTUALIZAR JUGADOR - Error 409: idEquipo inválido
+PUT {{baseUrl}}/jugadores/1
 Content-Type: application/json
 
 {
@@ -175,8 +185,8 @@ Content-Type: application/json
     "idEquipo": -5
 }
 
-### 18. ÉXITO - Actualizar jugador existente (200)
-PUT http://localhost:8090/api/futbol/jugadores/1
+### 18. ACTUALIZAR JUGADOR - Éxito
+PUT {{baseUrl}}/jugadores/1
 Content-Type: application/json
 
 {
@@ -188,8 +198,247 @@ Content-Type: application/json
     "idEquipo": 1
 }
 
-### 19. ERROR 404 - Eliminar jugador que no existe
-DELETE http://localhost:8090/api/futbol/jugadores/999
+### 19. ELIMINAR JUGADOR - Error 404: No existe
+DELETE {{baseUrl}}/jugadores/999
 
-### 20. ÉXITO - Eliminar jugador existente (204)
-DELETE http://localhost:8090/api/futbol/jugadores/1
+### 20. ELIMINAR JUGADOR - Éxito
+DELETE {{baseUrl}}/jugadores/1
+
+### ========================================
+### EQUIPOS - CRUD
+### ========================================
+
+### 21. CREAR EQUIPO - Éxito
+POST {{baseUrl}}/equipos/crear 
+Content-Type: application/json
+
+{
+    "nombre": "Real Madrid",
+    "estadio": "Santiago Bernabéu",
+    "entrenador": "Carlo Ancelotti",
+    "ciudad": "Madrid",
+    "fundacion": 1902,
+    "idLiga": 1
+}
+
+### 22. CREAR EQUIPO - Error 400: Fundación negativa
+POST {{baseUrl}}/equipos/crear
+Content-Type: application/json
+
+{
+    "nombre": "FC Barcelona",
+    "estadio": "Camp Nou",
+    "entrenador": "Xavi Hernández",
+    "ciudad": "Barcelona",
+    "fundacion": -1900,
+    "idLiga": 1
+}
+
+### 23. CREAR EQUIPO - Error 422: Campo nombre nulo
+POST {{baseUrl}}/equipos/crear
+Content-Type: application/json
+
+{
+    "nombre": null,
+    "estadio": "Wanda Metropolitano",
+    "entrenador": "Diego Pablo Simeone",
+    "ciudad": "Madrid",
+    "fundacion": 1903,
+    "idLiga": 1
+}
+
+### 24. CREAR EQUIPO - Error 422: Campo nombre faltante
+POST {{baseUrl}}/equipos/crear
+Content-Type: application/json
+
+{
+    "estadio": "La Cartuja",
+    "entrenador": "Entrenador A",
+    "ciudad": "Sevilla",
+    "fundacion": 1890,
+    "idLiga": 1
+}
+
+### 25. CREAR EQUIPO - Error 422: Campo idLiga faltante
+POST {{baseUrl}}/equipos/crear
+Content-Type: application/json
+
+{
+    "nombre": "Real Sociedad",
+    "estadio": "Anoeta",
+    "entrenador": "Imanol Alguacil",
+    "ciudad": "San Sebastián",
+    "fundacion": 1909
+}
+
+### 26. CREAR EQUIPO - Error 409: idLiga inválido (0)
+POST {{baseUrl}}/equipos/crear
+Content-Type: application/json
+
+{
+    "nombre": "Valencia CF",
+    "estadio": "Mestalla",
+    "entrenador": "Rubén Baraja",
+    "ciudad": "Valencia",
+    "fundacion": 1919,
+    "idLiga": 0
+}
+
+### 27. CREAR EQUIPO - Error 409: idLiga negativo
+POST {{baseUrl}}/equipos/crear
+Content-Type: application/json
+
+{
+    "nombre": "Real Betis",
+    "estadio": "Benito Villamarín",
+    "entrenador": "Manuel Pellegrini",
+    "ciudad": "Sevilla",
+    "fundacion": 1907,
+    "idLiga": -1
+}
+
+### 28. LEER EQUIPOS - Obtener todos
+GET {{baseUrl}}/equipos
+
+### 29. LEER EQUIPO - Error 404: No existe
+GET {{baseUrl}}/equipos/999
+
+### 30. BUSCAR EQUIPO - Por nombre
+GET {{baseUrl}}/equipos/buscar/nombre?nombre=Madrid
+
+### 31. BUSCAR EQUIPO - Sin resultados
+GET {{baseUrl}}/equipos/buscar/nombre?nombre=NoExiste
+
+### 32. ACTUALIZAR EQUIPO - Error 404: No existe
+PUT {{baseUrl}}/equipos/999
+Content-Type: application/json
+
+{
+    "nombre": "Equipo Actualizado",
+    "estadio": "Estadio Nuevo",
+    "entrenador": "Nuevo Entrenador",
+    "ciudad": "Ciudad Nueva",
+    "fundacion": 2000,
+    "idLiga": 2
+}
+
+### 33. ACTUALIZAR EQUIPO - Error 409: idLiga inválido
+PUT {{baseUrl}}/equipos/1
+Content-Type: application/json
+
+{
+    "nombre": "Real Madrid Actualizado",
+    "estadio": "Santiago Bernabéu",
+    "entrenador": "Carlo Ancelotti",
+    "ciudad": "Madrid",
+    "fundacion": 1902,
+    "idLiga": -5
+}
+
+### 34. ACTUALIZAR EQUIPO - Éxito
+PUT {{baseUrl}}/equipos/1
+Content-Type: application/json
+
+{
+    "nombre": "Real Madrid CF",
+    "estadio": "Santiago Bernabéu",
+    "entrenador": "Carlo Ancelotti",
+    "ciudad": "Madrid",
+    "fundacion": 1902,
+    "idLiga": 1
+}
+
+### 35. ELIMINAR EQUIPO - Error 404: No existe
+DELETE {{baseUrl}}/equipos/999
+
+### 36. ELIMINAR EQUIPO - Éxito
+DELETE {{baseUrl}}/equipos/1
+
+### ========================================
+### JUGADORES - PAGINACIÓN, ORDENACIÓN Y FILTRADO
+### ========================================
+
+### 37. PAGINACIÓN - Básica (página 0, 5 elementos)
+GET {{baseUrl}}/jugadores/filtrado?page=0&size=5
+
+### 38. ORDENACIÓN - Por nombre ascendente
+GET {{baseUrl}}/jugadores/filtrado?page=0&size=5&sort=nombre,asc
+
+### 39. ORDENACIÓN - Por dorsal descendente
+GET {{baseUrl}}/jugadores/filtrado?page=0&size=5&sort=dorsal,desc
+
+### 40. FILTRO - Dorsal igual a 10
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:IGUAL:10&page=0&size=10
+
+### 41. FILTRO - Dorsal mayor que 15
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:MAYOR_QUE:15&page=0&size=10
+
+### 42. FILTRO - Dorsal menor que 10
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:MENOR_QUE:10&page=0&size=10
+
+### 43. FILTRO - Nombre contiene texto
+GET {{baseUrl}}/jugadores/filtrado?filter=nombre:CONTIENE:Messi&page=0&size=10
+
+### 44. FILTRO - Nacionalidad igual a
+GET {{baseUrl}}/jugadores/filtrado?filter=nacionalidad:IGUAL:Argentina&page=0&size=10
+
+### 45. FILTROS MÚLTIPLES - Dorsal > 5 Y nombre contiene "a"
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:MAYOR_QUE:5&filter=nombre:CONTIENE:a&page=0&size=10
+
+### 46. FILTRO + ORDENACIÓN - Dorsal > 7 ordenado por nombre desc
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:MAYOR_QUE:7&page=0&size=10&sort=nombre,desc
+
+### 47. FILTRADO POST - Consulta compleja JSON
+POST {{baseUrl}}/jugadores/filtrado
+Content-Type: application/json
+
+{
+  "listaFiltros": [
+    {
+      "atributo": "dorsal",
+      "operacion": "MAYOR_QUE",
+      "valor": 5
+    },
+    {
+      "atributo": "nombre",
+      "operacion": "CONTIENE",
+      "valor": "a"
+    }
+  ],
+  "page": 0,
+  "size": 10,
+  "sort": ["nombre,asc"]
+}
+
+### ========================================
+### EQUIPOS - PAGINACIÓN, ORDENACIÓN Y FILTRADO
+### ========================================
+
+### 48. PAGINACIÓN - Básica
+GET {{baseUrl}}/equipos/filtrado?page=0&size=5
+
+### 49. FILTRO - Nombre contiene "Real"
+GET {{baseUrl}}/equipos/filtrado?filter=nombre:CONTIENE:Real&page=0&size=10
+
+### 50. FILTRO - Ciudad igual a "Madrid"
+GET {{baseUrl}}/equipos/filtrado?filter=ciudad:IGUAL:Madrid&page=0&size=10
+
+### 51. ORDENACIÓN - Por fundación descendente
+GET {{baseUrl}}/equipos/filtrado?page=0&size=10&sort=fundacion,desc
+
+### 52. FILTRADO POST - Consulta compleja JSON
+POST {{baseUrl}}/equipos/filtrado
+Content-Type: application/json
+
+{
+  "listaFiltros": [
+    {
+      "atributo": "ciudad",
+      "operacion": "CONTIENE",
+      "valor": "Barcelona"
+    }
+  ],
+  "page": 0,
+  "size": 5,
+  "sort": ["nombre,asc"]
+}

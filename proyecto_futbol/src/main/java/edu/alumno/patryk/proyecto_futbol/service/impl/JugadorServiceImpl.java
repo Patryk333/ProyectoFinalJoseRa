@@ -2,30 +2,48 @@ package edu.alumno.patryk.proyecto_futbol.service.impl;
 
 import java.util.List;
 
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.mapping.PropertyReferenceException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
+import edu.alumno.patryk.proyecto_futbol.exception.FiltroException;
 import edu.alumno.patryk.proyecto_futbol.exception.IntegrityConstraintViolationException;
 import edu.alumno.patryk.proyecto_futbol.exception.JugadorNotFoundException;
+import edu.alumno.patryk.proyecto_futbol.helper.PaginationFactory;
+import edu.alumno.patryk.proyecto_futbol.helper.PeticionListadoFiltradoConverter;
 import edu.alumno.patryk.proyecto_futbol.model.db.JugadorDb;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorInfo;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorList;
+import edu.alumno.patryk.proyecto_futbol.model.dto.PaginaResponse;
+import edu.alumno.patryk.proyecto_futbol.model.dto.PeticionListadoFiltrado;
 import edu.alumno.patryk.proyecto_futbol.repository.JugadorRepository;
 import edu.alumno.patryk.proyecto_futbol.service.JugadorService;
 import edu.alumno.patryk.proyecto_futbol.service.mapper.JugadorMapper;
+import edu.alumno.patryk.proyecto_futbol.srv.specification.FiltroBusquedaSpecification;
 
 @Service
 public class JugadorServiceImpl implements JugadorService {
 
     private final JugadorRepository jugadorRepository;
+    private final PaginationFactory paginationFactory;
+    private final PeticionListadoFiltradoConverter peticionConverter;
 
-    public JugadorServiceImpl(JugadorRepository jugadorRepository) {
+    public JugadorServiceImpl(
+            JugadorRepository jugadorRepository,
+            PaginationFactory paginationFactory,
+            PeticionListadoFiltradoConverter peticionConverter) {
         this.jugadorRepository = jugadorRepository;
+        this.paginationFactory = paginationFactory;
+        this.peticionConverter = peticionConverter;
     }
 
     @Override
     public JugadorEdit save(JugadorEdit jugadorEdit) {
-        // Validar que el idEquipo sea válido (no null y positivo)
         validarIdEquipo(jugadorEdit.getIdEquipo());
         
         JugadorDb jugadorDb = JugadorMapper.INSTANCE.jugadorEditToJugadorDb(jugadorEdit);
@@ -64,7 +82,6 @@ public class JugadorServiceImpl implements JugadorService {
 
     @Override
     public JugadorEdit actualizarJugador(Long id, JugadorEdit jugadorEdit) {
-        // Validar que el idEquipo sea válido
         validarIdEquipo(jugadorEdit.getIdEquipo());
         
         JugadorDb jugadorBuscado = jugadorRepository.findById(id)
@@ -79,19 +96,51 @@ public class JugadorServiceImpl implements JugadorService {
         jugadorRepository.save(jugadorBuscado);
         return JugadorMapper.INSTANCE.jugadorDbToJugadorEdit(jugadorBuscado);
     }
+
+    @Override
+    public PaginaResponse<JugadorList> findAll(String[] filter, int page, int size, String[] sort) throws FiltroException {
+        PeticionListadoFiltrado peticion = peticionConverter.convertFromParams(filter, page, size, sort);
+        return findAll(peticion);
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public PaginaResponse<JugadorList> findAll(PeticionListadoFiltrado peticionListadoFiltrado) throws FiltroException {
+        try {
+            // Configurar ordenamiento
+            Pageable pageable = paginationFactory.createPageable(peticionListadoFiltrado);
+            // Configurar criterio de filtrado con Specification
+            Specification<JugadorDb> filtrosBusquedaSpecification = new FiltroBusquedaSpecification<JugadorDb>(
+                    peticionListadoFiltrado.getListaFiltros());
+            // Filtrar y ordenar
+            Page<JugadorDb> page = jugadorRepository.findAll(filtrosBusquedaSpecification, pageable);
+            //Devolver respuesta
+            return JugadorMapper.pageToPaginaResponse(
+                page,
+                peticionListadoFiltrado.getListaFiltros(), 
+                peticionListadoFiltrado.getSort());
+        } catch (JpaSystemException e) {
+            String cause = "";
+            if (e.getRootCause() != null) {
+                if (e.getCause().getMessage() != null)
+                    cause = e.getRootCause().getMessage();
+            }
+            throw new FiltroException("BAD_OPERATOR_FILTER",
+                    "Error: No se puede realizar esa operación sobre el atributo por el tipo de dato", e.getMessage() + ":" + cause);
+        } catch (PropertyReferenceException e) {
+            throw new FiltroException("BAD_ATTRIBUTE_ORDER",
+                    "Error: No existe el nombre del atributo de ordenación en la tabla", e.getMessage());
+        } catch (InvalidDataAccessApiUsageException e) {
+            throw new FiltroException("BAD_ATTRIBUTE_FILTER", "Error: Posiblemente no existe el atributo en la tabla",
+                    e.getMessage());
+        }
+    }
     
-    /**
-     * Valida que el idEquipo sea válido
-     * @param idEquipo el ID del equipo
-     * @throws IntegrityConstraintViolationException si el equipo no es válido
-     */
     private void validarIdEquipo(Long idEquipo) {
         if (idEquipo == null || idEquipo <= 0) {
             throw new IntegrityConstraintViolationException("FOREIGN_KEY_VIOLATION", 
                 "El id del equipo debe ser válido y mayor que 0");
         }
-        // Nota: Se podría añadir aquí una llamada a un EquipoRepository para validar
-        // que el equipo existe realmente en la BD
     }
 
 }
