@@ -2,6 +2,7 @@ package edu.alumno.patryk.proyecto_futbol.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.alumno.patryk.proyecto_futbol.exception.FiltroException;
+import edu.alumno.patryk.proyecto_futbol.helper.FiltroBusquedaHelper;
+import edu.alumno.patryk.proyecto_futbol.helper.PaginationHelper;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoInfo;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoList;
+import edu.alumno.patryk.proyecto_futbol.model.dto.FiltroBusqueda;
 import edu.alumno.patryk.proyecto_futbol.model.dto.PaginaResponse;
-import edu.alumno.patryk.proyecto_futbol.model.dto.PeticionListadoFiltrado;
 import edu.alumno.patryk.proyecto_futbol.service.EquipoService;
 import jakarta.validation.Valid;
 
@@ -58,14 +60,15 @@ public class EquipoRestController {
             @RequestParam(required = false) String[] filter,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort) throws FiltroException {
-        return ResponseEntity.ok(equipoService.findAll(filter, page, size, sort));
-    }
-
-    @PostMapping("/equipos/filtrado")
-    public ResponseEntity<PaginaResponse<EquipoList>> getAllEquiposPost(
-            @Valid @RequestBody PeticionListadoFiltrado peticionListadoFiltrado) throws FiltroException {
-        return ResponseEntity.ok(equipoService.findAll(peticionListadoFiltrado));
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
+        //Configurar filtros
+        List<FiltroBusqueda> listaFiltros = FiltroBusquedaHelper.createFiltroBusqueda(filter);
+        //Configurar ordenamiento
+        Pageable pageable = PaginationHelper.createPageable(page, size, sort);
+        //Recuperar los datos del service
+        PaginaResponse<EquipoList> response = equipoService.findAllPageEquipoList(listaFiltros, pageable);
+        //Devolver respuesta
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/equipos/{id}")

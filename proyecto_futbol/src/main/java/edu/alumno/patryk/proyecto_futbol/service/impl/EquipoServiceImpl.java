@@ -2,25 +2,19 @@ package edu.alumno.patryk.proyecto_futbol.service.impl;
 
 import java.util.List;
 
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.mapping.PropertyReferenceException;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
 import edu.alumno.patryk.proyecto_futbol.exception.EquipoNotFoundException;
-import edu.alumno.patryk.proyecto_futbol.exception.FiltroException;
 import edu.alumno.patryk.proyecto_futbol.exception.IntegrityConstraintViolationException;
-import edu.alumno.patryk.proyecto_futbol.helper.PaginationFactory;
-import edu.alumno.patryk.proyecto_futbol.helper.PeticionListadoFiltradoConverter;
 import edu.alumno.patryk.proyecto_futbol.model.db.EquipoDb;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoInfo;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoList;
+import edu.alumno.patryk.proyecto_futbol.model.dto.FiltroBusqueda;
 import edu.alumno.patryk.proyecto_futbol.model.dto.PaginaResponse;
-import edu.alumno.patryk.proyecto_futbol.model.dto.PeticionListadoFiltrado;
 import edu.alumno.patryk.proyecto_futbol.repository.EquipoRepository;
 import edu.alumno.patryk.proyecto_futbol.service.EquipoService;
 import edu.alumno.patryk.proyecto_futbol.service.mapper.EquipoMapper;
@@ -30,16 +24,9 @@ import edu.alumno.patryk.proyecto_futbol.srv.specification.FiltroBusquedaSpecifi
 public class EquipoServiceImpl implements EquipoService {
 
     private final EquipoRepository equipoRepository;
-    private final PaginationFactory paginationFactory;
-    private final PeticionListadoFiltradoConverter peticionConverter;
 
-    public EquipoServiceImpl(
-            EquipoRepository equipoRepository,
-            PaginationFactory paginationFactory,
-            PeticionListadoFiltradoConverter peticionConverter) {
+    public EquipoServiceImpl(EquipoRepository equipoRepository) {
         this.equipoRepository = equipoRepository;
-        this.paginationFactory = paginationFactory;
-        this.peticionConverter = peticionConverter;
     }
 
     @Override
@@ -98,42 +85,27 @@ public class EquipoServiceImpl implements EquipoService {
     }
 
     @Override
-    public PaginaResponse<EquipoList> findAll(String[] filter, int page, int size, String[] sort) throws FiltroException {
-        PeticionListadoFiltrado peticion = peticionConverter.convertFromParams(filter, page, size, sort);
-        return findAll(peticion);
-    }
-
-    @SuppressWarnings("null")
-    @Override
-    public PaginaResponse<EquipoList> findAll(PeticionListadoFiltrado peticionListadoFiltrado) throws FiltroException {
-        try {
-            // Configurar ordenamiento
-            Pageable pageable = paginationFactory.createPageable(peticionListadoFiltrado);
-            // Configurar criterio de filtrado con Specification
-            Specification<EquipoDb> filtrosBusquedaSpecification = new FiltroBusquedaSpecification<EquipoDb>(
-                    peticionListadoFiltrado.getListaFiltros());
-            // Filtrar y ordenar
-            Page<EquipoDb> page = equipoRepository.findAll(filtrosBusquedaSpecification, pageable);
-            //Devolver respuesta
-            return EquipoMapper.pageToPaginaResponse(
-                page,
-                peticionListadoFiltrado.getListaFiltros(), 
-                peticionListadoFiltrado.getSort());
-        } catch (JpaSystemException e) {
-            String cause = "";
-            if (e.getRootCause() != null) {
-                if (e.getCause().getMessage() != null)
-                    cause = e.getRootCause().getMessage();
-            }
-            throw new FiltroException("BAD_OPERATOR_FILTER",
-                    "Error: No se puede realizar esa operación sobre el atributo por el tipo de dato", e.getMessage() + ":" + cause);
-        } catch (PropertyReferenceException e) {
-            throw new FiltroException("BAD_ATTRIBUTE_ORDER",
-                    "Error: No existe el nombre del atributo de ordenación en la tabla", e.getMessage());
-        } catch (InvalidDataAccessApiUsageException e) {
-            throw new FiltroException("BAD_ATTRIBUTE_FILTER", "Error: Posiblemente no existe el atributo en la tabla",
-                    e.getMessage());
+    public PaginaResponse<EquipoList> findAllPageEquipoList(List<FiltroBusqueda> listaFiltros, Pageable pageable) {
+        Page<EquipoDb> paginaEquipoDb;
+        
+        if(listaFiltros.isEmpty()) {
+            paginaEquipoDb = equipoRepository.findAll(pageable);
+        } else {
+            Specification<EquipoDb> filtrosBusquedaSpecification = new FiltroBusquedaSpecification<>(listaFiltros);
+            paginaEquipoDb = equipoRepository.findAll(filtrosBusquedaSpecification, pageable);
         }
+        
+        return new PaginaResponse<>(
+            paginaEquipoDb.getNumber(),
+            paginaEquipoDb.getSize(),
+            paginaEquipoDb.getTotalElements(),
+            paginaEquipoDb.getTotalPages(),
+            EquipoMapper.INSTANCE.equiposDbToEquipoList(paginaEquipoDb.getContent()),
+            listaFiltros,
+            paginaEquipoDb.getSort().stream()
+                .map(order -> order.getProperty() + "," + order.getDirection().name().toLowerCase())
+                .toList()
+        );
     }
     
     private void validarIdLiga(Long idLiga) {

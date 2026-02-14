@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import edu.alumno.patryk.proyecto_futbol.exception.CustomErrorResponse;
+import edu.alumno.patryk.proyecto_futbol.exception.EquipoNotFoundException;
 import edu.alumno.patryk.proyecto_futbol.exception.FiltroException;
 import edu.alumno.patryk.proyecto_futbol.exception.IntegrityConstraintViolationException;
 import edu.alumno.patryk.proyecto_futbol.exception.InvalidEntityException;
@@ -24,6 +25,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JugadorNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<CustomErrorResponse> handleJugadorNotFoundException(JugadorNotFoundException ex) {
+        CustomErrorResponse response = new CustomErrorResponse(ex.getErrorCode(), ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(EquipoNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<CustomErrorResponse> handleEquipoNotFoundException(EquipoNotFoundException ex) {
         CustomErrorResponse response = new CustomErrorResponse(ex.getErrorCode(), ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }

@@ -2,10 +2,12 @@ package edu.alumno.patryk.proyecto_futbol.service.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
 import edu.alumno.patryk.proyecto_futbol.model.db.JugadorDb;
+import edu.alumno.patryk.proyecto_futbol.model.db.JugadorEquipoDb;
 import edu.alumno.patryk.proyecto_futbol.model.dto.FiltroBusqueda;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorInfo;
@@ -26,6 +28,9 @@ public interface JugadorMapper {
     JugadorDb jugadorInfoToJugadorDb(JugadorInfo JugadorInfo);
 
     JugadorInfo jugadorDbToJugadorInfo(JugadorDb JugadorDb);
+
+    @Mapping(source = "equipo.id", target = "idEquipo")
+    JugadorInfo jugadorEquipoDbToJugadorInfo(JugadorEquipoDb jugadorEquipoDb);
 
     List<JugadorList> jugadoresDbToJugadorList(List<JugadorDb> jugadoresDb);
 

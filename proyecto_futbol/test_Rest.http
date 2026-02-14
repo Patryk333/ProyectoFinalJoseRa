@@ -18,7 +18,7 @@ Content-Type: application/json
     "posicion": "Delantero",
     "nacionalidad": "Español",
     "fechaNacimiento": "19/06/2000",
-    "idEquipo": 1
+    "idEquipo": 2
 }
 
 ### 2. CREAR JUGADOR - Error 400: Dorsal fuera de rango (mayor a 99)
@@ -40,7 +40,7 @@ Content-Type: application/json
 
 {
     "nombre": "Carlos López",
-    "dorsal": 0,
+    "dorsal": -10,
     "posicion": "Defensa",
     "nacionalidad": "Español",
     "fechaNacimiento": "15/08/1998",
@@ -141,7 +141,7 @@ GET {{baseUrl}}/jugadores
 GET {{baseUrl}}/jugadores/999
 
 ### 13. BUSCAR JUGADOR - Por nombre
-GET {{baseUrl}}/jugadores/buscar/nombre?nombre=Marvel
+GET {{baseUrl}}/jugadores/buscar/nombre?nombre=Ter S
 
 ### 14. BUSCAR JUGADOR - Sin resultados
 GET {{baseUrl}}/jugadores/buscar/nombre?nombre=NoExiste
@@ -186,11 +186,11 @@ Content-Type: application/json
 }
 
 ### 18. ACTUALIZAR JUGADOR - Éxito
-PUT {{baseUrl}}/jugadores/1
+PUT {{baseUrl}}/jugadores/2
 Content-Type: application/json
 
 {
-    "nombre": "Marvel Dreamer Actualizado",
+    "nombre": "Juan",
     "dorsal": 99,
     "posicion": "Centrocampista",
     "nacionalidad": "Portugués",
@@ -202,7 +202,7 @@ Content-Type: application/json
 DELETE {{baseUrl}}/jugadores/999
 
 ### 20. ELIMINAR JUGADOR - Éxito
-DELETE {{baseUrl}}/jugadores/1
+DELETE {{baseUrl}}/jugadores/5
 
 ### ========================================
 ### EQUIPOS - CRUD
@@ -336,7 +336,7 @@ Content-Type: application/json
 }
 
 ### 34. ACTUALIZAR EQUIPO - Éxito
-PUT {{baseUrl}}/equipos/1
+PUT {{baseUrl}}/equipos/6
 Content-Type: application/json
 
 {
@@ -352,7 +352,7 @@ Content-Type: application/json
 DELETE {{baseUrl}}/equipos/999
 
 ### 36. ELIMINAR EQUIPO - Éxito
-DELETE {{baseUrl}}/equipos/1
+DELETE {{baseUrl}}/equipos/6
 
 ### ========================================
 ### JUGADORES - PAGINACIÓN, ORDENACIÓN Y FILTRADO
@@ -368,47 +368,28 @@ GET {{baseUrl}}/jugadores/filtrado?page=0&size=5&sort=nombre,asc
 GET {{baseUrl}}/jugadores/filtrado?page=0&size=5&sort=dorsal,desc
 
 ### 40. FILTRO - Dorsal igual a 10
-GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:IGUAL:10&page=0&size=10
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal=10&page=0&size=10
 
 ### 41. FILTRO - Dorsal mayor que 15
-GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:MAYOR_QUE:15&page=0&size=10
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal>15&page=0&size=10
 
 ### 42. FILTRO - Dorsal menor que 10
-GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:MENOR_QUE:10&page=0&size=10
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal<10&page=0&size=10
 
 ### 43. FILTRO - Nombre contiene texto
-GET {{baseUrl}}/jugadores/filtrado?filter=nombre:CONTIENE:Messi&page=0&size=10
+GET {{baseUrl}}/jugadores/filtrado?filter=nombre~Al&page=0&size=10
 
 ### 44. FILTRO - Nacionalidad igual a
-GET {{baseUrl}}/jugadores/filtrado?filter=nacionalidad:IGUAL:Argentina&page=0&size=10
+GET {{baseUrl}}/jugadores/filtrado?filter=nacionalidad=Argentina&page=0&size=10
 
 ### 45. FILTROS MÚLTIPLES - Dorsal > 5 Y nombre contiene "a"
-GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:MAYOR_QUE:5&filter=nombre:CONTIENE:a&page=0&size=10
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal>5&filter=nombre~a&page=0&size=10
 
 ### 46. FILTRO + ORDENACIÓN - Dorsal > 7 ordenado por nombre desc
-GET {{baseUrl}}/jugadores/filtrado?filter=dorsal:MAYOR_QUE:7&page=0&size=10&sort=nombre,desc
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal>7&page=0&size=10&sort=nombre,desc
 
-### 47. FILTRADO POST - Consulta compleja JSON
-POST {{baseUrl}}/jugadores/filtrado
-Content-Type: application/json
-
-{
-  "listaFiltros": [
-    {
-      "atributo": "dorsal",
-      "operacion": "MAYOR_QUE",
-      "valor": 5
-    },
-    {
-      "atributo": "nombre",
-      "operacion": "CONTIENE",
-      "valor": "a"
-    }
-  ],
-  "page": 0,
-  "size": 10,
-  "sort": ["nombre,asc"]
-}
+### 47. FILTRADO - Consulta con múltiples filtros usando sintaxis simplificada
+GET {{baseUrl}}/jugadores/filtrado?filter=dorsal>5&filter=nombre~a&page=0&size=10&sort=nombre,asc
 
 ### ========================================
 ### EQUIPOS - PAGINACIÓN, ORDENACIÓN Y FILTRADO
@@ -418,27 +399,23 @@ Content-Type: application/json
 GET {{baseUrl}}/equipos/filtrado?page=0&size=5
 
 ### 49. FILTRO - Nombre contiene "Real"
-GET {{baseUrl}}/equipos/filtrado?filter=nombre:CONTIENE:Real&page=0&size=10
+GET {{baseUrl}}/equipos/filtrado?filter=nombre~Real&page=0&size=10
 
 ### 50. FILTRO - Ciudad igual a "Madrid"
-GET {{baseUrl}}/equipos/filtrado?filter=ciudad:IGUAL:Madrid&page=0&size=10
+GET {{baseUrl}}/equipos/filtrado?filter=ciudad=Madrid&page=0&size=10
 
 ### 51. ORDENACIÓN - Por fundación descendente
 GET {{baseUrl}}/equipos/filtrado?page=0&size=10&sort=fundacion,desc
 
-### 52. FILTRADO POST - Consulta compleja JSON
-POST {{baseUrl}}/equipos/filtrado
-Content-Type: application/json
+### 52. FILTRADO - Consulta con filtro de ciudad usando sintaxis simplificada
+GET {{baseUrl}}/equipos/filtrado?filter=ciudad~Barcelona&page=0&size=5&sort=nombre,asc
 
-{
-  "listaFiltros": [
-    {
-      "atributo": "ciudad",
-      "operacion": "CONTIENE",
-      "valor": "Barcelona"
-    }
-  ],
-  "page": 0,
-  "size": 5,
-  "sort": ["nombre,asc"]
-}
+### ========================================
+### EQUIPOS - RELACION EQUIPO/JUGADORES
+### ========================================
+
+### 53. LISTAR EQUIPOS CON JUGADORES
+GET {{baseUrl}}/equipos/con-jugadores
+
+### 54. OBTENER EQUIPO CON SUS JUGADORES (ID)
+GET {{baseUrl}}/equipos/7/jugadores

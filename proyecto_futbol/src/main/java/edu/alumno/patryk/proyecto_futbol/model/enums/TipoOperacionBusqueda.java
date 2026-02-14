@@ -2,7 +2,7 @@ package edu.alumno.patryk.proyecto_futbol.model.enums;
 
 public enum TipoOperacionBusqueda {
     IGUAL("="),
-    CONTIENE("LIKE"),
+    CONTIENE("~"),
     MAYOR_QUE(">"),
     MENOR_QUE("<");
 
