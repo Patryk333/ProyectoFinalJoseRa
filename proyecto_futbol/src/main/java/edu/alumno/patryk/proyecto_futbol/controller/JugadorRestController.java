@@ -61,13 +61,9 @@ public class JugadorRestController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,asc") String[] sort) {
-        //Configurar filtros
         List<FiltroBusqueda> listaFiltros = FiltroBusquedaHelper.createFiltroBusqueda(filter);
-        //Configurar ordenamiento
         Pageable pageable = PaginationHelper.createPageable(page, size, sort);
-        //Recuperar los datos del service
         PaginaResponse<JugadorList> response = jugadorService.findAllPageJugadorList(listaFiltros, pageable);
-        //Devolver respuesta
         return ResponseEntity.ok(response);
     }
     

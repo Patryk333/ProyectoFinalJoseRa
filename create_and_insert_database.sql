@@ -1,4 +1,7 @@
---CREATE DATABASE futbol; la he creado con el comando que utilizamos en la practica de futbol
+--la he creado con el comando que utilizamos en la practica de futbol
+-- sudo docker run --name PostgreSQL-DWES -p 5432:5432 -e POSTGRES_DB=futbol -e
+-- POSTGRES_USER=futbol -e POSTGRES_PASSWORD=futbolSimarro -v
+-- ./sql:/var/lib/postgresql/data -d postgres:17.0
 
 COMMIT;
 BEGIN;
