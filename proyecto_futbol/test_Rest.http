@@ -419,3 +419,65 @@ GET {{baseUrl}}/equipos/con-jugadores
 
 ### 54. OBTENER EQUIPO CON SUS JUGADORES (ID)
 GET {{baseUrl}}/equipos/7/jugadores
+
+### ========================================
+### AUTENTICACIÓN CON JWT
+### ========================================
+
+### VARIABLES
+@authBaseUrl = http://localhost:8090/api/auth
+@secureBaseUrl = http://localhost:8090/api/secure
+
+### 55. REGISTRO DE NUEVO USUARIO
+POST {{authBaseUrl}}/register
+Content-Type: application/json
+
+{
+    "username": "juanperez2",
+    "email": "juan222@example.com",
+    "password": "miPassword123!",
+    "role": "ROLE_USER"
+}
+
+### 56. REGISTRO DE OTRO USUARIO - ADMIN
+POST {{authBaseUrl}}/register
+Content-Type: application/json
+
+{
+    "username": "admin22",
+    "email": "admin22@example.com",
+    "password": "adminPassword123!",
+    "role": "ROLE_ADMIN"
+}
+
+### 57. LOGIN CON CREDENCIALES CORRECTAS
+POST {{authBaseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "juanperez",
+    "password": "miPassword123!"
+}
+
+### 58. LOGIN CON CREDENCIALES INCORRECTAS
+POST {{authBaseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "juanpérez",
+    "password": "passwordIncorrecto"
+}
+
+### ========================================
+### ENDPOINTS SECURIZADOS CON JWT
+### Requieren autenticación con token JWT
+### ========================================
+
+### 59. OBTENER PERFIL DEL USUARIO AUTENTICADO tanto aqui como en la de abajo pones el token que te de el login o el crear usuario
+GET {{secureBaseUrl}}/usuarios/perfil
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluMjIiLCJpYXQiOjE3NzEzMzI1MTgsImV4cCI6MTc3MTM2ODUxOH0.0KDaZQGsrNt7SQKf9BZLuOWI2duDuEii6iMtBHEo1gPk3KPFXnt_B_qLzKbExPpESs4aAUmWbPtyktnWoklvQg
+
+### 60. OBTENER USUARIO POR ID (SECURIZADO)
+GET {{secureBaseUrl}}/usuarios/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluMjIiLCJpYXQiOjE3NzEzMzI1MTgsImV4cCI6MTc3MTM2ODUxOH0.0KDaZQGsrNt7SQKf9BZLuOWI2duDuEii6iMtBHEo1gPk3KPFXnt_B_qLzKbExPpESs4aAUmWbPtyktnWoklvQg
+
