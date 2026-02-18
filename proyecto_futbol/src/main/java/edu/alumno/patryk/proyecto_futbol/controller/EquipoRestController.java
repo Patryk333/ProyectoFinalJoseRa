@@ -19,6 +19,9 @@ import edu.alumno.patryk.proyecto_futbol.helper.PaginationHelper;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoInfo;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoList;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasEquipoDto;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasGeneralesDto;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasLigaDto;
 import edu.alumno.patryk.proyecto_futbol.model.dto.FiltroBusqueda;
 import edu.alumno.patryk.proyecto_futbol.model.dto.PaginaResponse;
 import edu.alumno.patryk.proyecto_futbol.service.EquipoService;
@@ -119,6 +122,34 @@ public class EquipoRestController {
     })
     public EquipoEdit actualizarEquipo(@PathVariable Long id, @Valid @RequestBody EquipoEdit equipoEdit) {
         return equipoService.actualizarEquipo(id, equipoEdit);
+    }
+    
+    @GetMapping("/estadisticas/generales")
+    @Operation(summary = "Estadísticas generales del sistema", description = "Devuelve estadísticas globales: total de equipos, jugadores, ligas y promedio de jugadores por equipo.")
+    @ApiResponse(responseCode = "200", description = "Estadísticas obtenidas exitosamente")
+    public ResponseEntity<EstadisticasGeneralesDto> obtenerEstadisticasGenerales() {
+        return ResponseEntity.ok(equipoService.obtenerEstadisticasGenerales());
+    }
+    
+    @GetMapping("/estadisticas/equipos")
+    @Operation(summary = "Estadísticas de jugadores por equipo", description = "Devuelve el número de jugadores que tiene cada equipo junto con su información básica.")
+    @ApiResponse(responseCode = "200", description = "Estadísticas obtenidas exitosamente")
+    public ResponseEntity<List<EstadisticasEquipoDto>> obtenerEstadisticasEquipos() {
+        return ResponseEntity.ok(equipoService.obtenerEstadisticasEquipos());
+    }
+    
+    @GetMapping("/estadisticas/ligas")
+    @Operation(summary = "Estadísticas de equipos por liga", description = "Devuelve el número de equipos y jugadores agrupados por liga.")
+    @ApiResponse(responseCode = "200", description = "Estadísticas obtenidas exitosamente")
+    public ResponseEntity<List<EstadisticasLigaDto>> obtenerEstadisticasPorLiga() {
+        return ResponseEntity.ok(equipoService.obtenerEstadisticasPorLiga());
+    }
+    
+    @GetMapping("/estadisticas/total-equipos")
+    @Operation(summary = "Total de equipos", description = "Devuelve el número total de equipos registrados en el sistema.")
+    @ApiResponse(responseCode = "200", description = "Total obtenido exitosamente")
+    public ResponseEntity<Long> obtenerTotalEquipos() {
+        return ResponseEntity.ok(equipoService.obtenerTotalEquipos());
     }
     
 }

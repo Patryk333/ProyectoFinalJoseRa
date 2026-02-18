@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.alumno.patryk.proyecto_futbol.helper.FiltroBusquedaHelper;
 import edu.alumno.patryk.proyecto_futbol.helper.PaginationHelper;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasPorNacionalidadDto;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasPorPosicionDto;
 import edu.alumno.patryk.proyecto_futbol.model.dto.FiltroBusqueda;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorInfo;
@@ -110,4 +112,33 @@ public class JugadorRestController {
     public JugadorEdit actualizarJugador(@PathVariable Long id, @Valid @RequestBody JugadorEdit jugadorEdit) {
         return jugadorService.actualizarJugador(id, jugadorEdit);
     }
+    
+    @GetMapping("/jugadores/estadisticas/por-posicion")
+    @Operation(summary = "Estadísticas de jugadores por posición", description = "Devuelve el conteo de jugadores agrupados por su posición en el campo.")
+    @ApiResponse(responseCode = "200", description = "Estadísticas obtenidas exitosamente")
+    public List<EstadisticasPorPosicionDto> obtenerEstadisticasPorPosicion() {
+        return jugadorService.obtenerEstadisticasPorPosicion();
+    }
+    
+    @GetMapping("/jugadores/estadisticas/por-nacionalidad")
+    @Operation(summary = "Estadísticas de jugadores por nacionalidad", description = "Devuelve el conteo de jugadores agrupados por su nacionalidad.")
+    @ApiResponse(responseCode = "200", description = "Estadísticas obtenidas exitosamente")
+    public List<EstadisticasPorNacionalidadDto> obtenerEstadisticasPorNacionalidad() {
+        return jugadorService.obtenerEstadisticasPorNacionalidad();
+    }
+    
+    @GetMapping("/jugadores/estadisticas/total")
+    @Operation(summary = "Total de jugadores", description = "Devuelve el número total de jugadores registrados en el sistema.")
+    @ApiResponse(responseCode = "200", description = "Total obtenido exitosamente")
+    public ResponseEntity<Long> obtenerTotalJugadores() {
+        return ResponseEntity.ok(jugadorService.obtenerTotalJugadores());
+    }
+    
+    @GetMapping("/jugadores/estadisticas/promedio-por-equipo")
+    @Operation(summary = "Promedio de jugadores por equipo", description = "Devuelve el promedio de jugadores que tiene cada equipo.")
+    @ApiResponse(responseCode = "200", description = "Promedio calculado exitosamente")
+    public ResponseEntity<Double> obtenerPromedioJugadoresPorEquipo() {
+        return ResponseEntity.ok(jugadorService.obtenerPromedioJugadoresPorEquipo());
+    }
 }
+

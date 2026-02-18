@@ -13,9 +13,13 @@ import edu.alumno.patryk.proyecto_futbol.model.db.EquipoDb;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoInfo;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoList;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasEquipoDto;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasGeneralesDto;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasLigaDto;
 import edu.alumno.patryk.proyecto_futbol.model.dto.FiltroBusqueda;
 import edu.alumno.patryk.proyecto_futbol.model.dto.PaginaResponse;
 import edu.alumno.patryk.proyecto_futbol.repository.EquipoRepository;
+import edu.alumno.patryk.proyecto_futbol.repository.JugadorRepository;
 import edu.alumno.patryk.proyecto_futbol.service.EquipoService;
 import edu.alumno.patryk.proyecto_futbol.service.mapper.EquipoMapper;
 import edu.alumno.patryk.proyecto_futbol.srv.specification.FiltroBusquedaSpecification;
@@ -24,9 +28,11 @@ import edu.alumno.patryk.proyecto_futbol.srv.specification.FiltroBusquedaSpecifi
 public class EquipoServiceImpl implements EquipoService {
 
     private final EquipoRepository equipoRepository;
+    private final JugadorRepository jugadorRepository;
 
-    public EquipoServiceImpl(EquipoRepository equipoRepository) {
+    public EquipoServiceImpl(EquipoRepository equipoRepository, JugadorRepository jugadorRepository) {
         this.equipoRepository = equipoRepository;
+        this.jugadorRepository = jugadorRepository;
     }
 
     @Override
@@ -106,6 +112,51 @@ public class EquipoServiceImpl implements EquipoService {
                 .map(order -> order.getProperty() + "," + order.getDirection().name().toLowerCase())
                 .toList()
         );
+    }
+    
+    @Override
+    public EstadisticasGeneralesDto obtenerEstadisticasGenerales() {
+        Long totalEquipos = equipoRepository.count();
+        Long totalJugadores = jugadorRepository.count();
+        Long totalLigas = equipoRepository.countDistinctLigas();
+        Double promedioJugadores = totalEquipos > 0 ? totalJugadores.doubleValue() / totalEquipos.doubleValue() : 0.0;
+        
+        return new EstadisticasGeneralesDto(totalEquipos, totalJugadores, totalLigas, promedioJugadores);
+    }
+    
+    @Override
+    public List<EstadisticasEquipoDto> obtenerEstadisticasEquipos() {
+        List<Object[]> resultados = equipoRepository.estadisticasJugadoresPorEquipo();
+        return resultados.stream()
+            .map(obj -> new EstadisticasEquipoDto(
+                (Long) obj[0],
+                (String) obj[1],
+                ((Number) obj[2]).longValue(),
+                (String) obj[3]
+            ))
+            .toList();
+    }
+    
+    @Override
+    public List<EstadisticasLigaDto> obtenerEstadisticasPorLiga() {
+        List<Object[]> resultados = equipoRepository.countEquiposPorLiga();
+        return resultados.stream()
+            .map(obj -> {
+                Long idLiga = (Long) obj[0];
+                Long cantidadEquipos = (Long) obj[1];
+                Long totalJugadores = equipoRepository.findAll().stream()
+                    .filter(e -> e.getIdLiga().equals(idLiga))
+                    .mapToLong(e -> jugadorRepository.count())
+                    .sum();
+                
+                return new EstadisticasLigaDto(idLiga, cantidadEquipos, totalJugadores);
+            })
+            .toList();
+    }
+    
+    @Override
+    public Long obtenerTotalEquipos() {
+        return equipoRepository.count();
     }
     
     private void validarIdLiga(Long idLiga) {

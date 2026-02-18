@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import edu.alumno.patryk.proyecto_futbol.exception.IntegrityConstraintViolationException;
 import edu.alumno.patryk.proyecto_futbol.exception.JugadorNotFoundException;
 import edu.alumno.patryk.proyecto_futbol.model.db.JugadorDb;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasPorNacionalidadDto;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasPorPosicionDto;
 import edu.alumno.patryk.proyecto_futbol.model.dto.FiltroBusqueda;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.JugadorInfo;
@@ -106,6 +108,39 @@ public class JugadorServiceImpl implements JugadorService {
                 .map(order -> order.getProperty() + "," + order.getDirection().name().toLowerCase())
                 .toList()
         );
+    }
+    
+    @Override
+    public List<EstadisticasPorPosicionDto> obtenerEstadisticasPorPosicion() {
+        List<Object[]> resultados = jugadorRepository.countJugadoresPorPosicion();
+        return resultados.stream()
+            .map(obj -> new EstadisticasPorPosicionDto((String) obj[0], (Long) obj[1]))
+            .toList();
+    }
+    
+    @Override
+    public List<EstadisticasPorNacionalidadDto> obtenerEstadisticasPorNacionalidad() {
+        List<Object[]> resultados = jugadorRepository.countJugadoresPorNacionalidad();
+        return resultados.stream()
+            .map(obj -> new EstadisticasPorNacionalidadDto((String) obj[0], (Long) obj[1]))
+            .toList();
+    }
+    
+    @Override
+    public Long obtenerTotalJugadores() {
+        return jugadorRepository.count();
+    }
+    
+    @Override
+    public Double obtenerPromedioJugadoresPorEquipo() {
+        Long totalJugadores = jugadorRepository.count();
+        Long totalEquipos = jugadorRepository.countEquiposConJugadores();
+        
+        if (totalEquipos == 0) {
+            return 0.0;
+        }
+        
+        return totalJugadores.doubleValue() / totalEquipos.doubleValue();
     }
     
     private void validarIdEquipo(Long idEquipo) {
