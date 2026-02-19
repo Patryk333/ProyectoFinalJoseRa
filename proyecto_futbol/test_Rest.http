@@ -481,3 +481,38 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6I
 GET {{secureBaseUrl}}/usuarios/1
 Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluMjIiLCJpYXQiOjE3NzEzMzI1MTgsImV4cCI6MTc3MTM2ODUxOH0.0KDaZQGsrNt7SQKf9BZLuOWI2duDuEii6iMtBHEo1gPk3KPFXnt_B_qLzKbExPpESs4aAUmWbPtyktnWoklvQg
 
+### ENDPOINTS DE CONSULTAS AGREGADAS - JUGADORES
+
+### Estadísticas de jugadores por posición
+GET http://localhost:8090/api/futbol/jugadores/estadisticas/por-posicion
+Content-Type: application/json
+
+### Estadísticas de jugadores por nacionalidad
+GET http://localhost:8090/api/futbol/jugadores/estadisticas/por-nacionalidad
+Content-Type: application/json
+
+### Total de jugadores
+GET http://localhost:8090/api/futbol/jugadores/estadisticas/total
+Content-Type: application/json
+
+### Promedio de jugadores por equipo
+GET http://localhost:8090/api/futbol/jugadores/estadisticas/promedio-por-equipo
+Content-Type: application/json
+
+### ENDPOINTS DE CONSULTAS AGREGADAS - EQUIPOS
+
+### Estadísticas generales del sistema
+GET http://localhost:8090/api/futbol/estadisticas/generales
+Content-Type: application/json
+
+### Estadísticas de jugadores por equipo
+GET http://localhost:8090/api/futbol/estadisticas/equipos
+Content-Type: application/json
+
+### Estadísticas de equipos por liga
+GET http://localhost:8090/api/futbol/estadisticas/ligas
+Content-Type: application/json
+
+### Total de equipos
+GET http://localhost:8090/api/futbol/estadisticas/total-equipos
+Content-Type: application/json
