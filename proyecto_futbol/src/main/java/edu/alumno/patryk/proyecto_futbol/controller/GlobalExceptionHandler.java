@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import edu.alumno.patryk.proyecto_futbol.exception.CustomErrorResponse;
+import edu.alumno.patryk.proyecto_futbol.exception.DocEquipoNotFoundException;
 import edu.alumno.patryk.proyecto_futbol.exception.EquipoNotFoundException;
 import edu.alumno.patryk.proyecto_futbol.exception.FiltroException;
 import edu.alumno.patryk.proyecto_futbol.exception.IntegrityConstraintViolationException;
 import edu.alumno.patryk.proyecto_futbol.exception.InvalidEntityException;
 import edu.alumno.patryk.proyecto_futbol.exception.JugadorNotFoundException;
+import edu.alumno.patryk.proyecto_futbol.exception.MultipartProcessingException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,6 +36,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CustomErrorResponse> handleEquipoNotFoundException(EquipoNotFoundException ex) {
         CustomErrorResponse response = new CustomErrorResponse(ex.getErrorCode(), ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(DocEquipoNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<CustomErrorResponse> handleDocEquipoNotFoundException(DocEquipoNotFoundException ex) {
+        CustomErrorResponse response = new CustomErrorResponse(ex.getErrorCode(), ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(MultipartProcessingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<CustomErrorResponse> handleMultipartProcessingException(MultipartProcessingException ex) {
+        CustomErrorResponse response = new CustomErrorResponse(ex.getErrorCode(), ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
     
     @ExceptionHandler(InvalidEntityException.class)
