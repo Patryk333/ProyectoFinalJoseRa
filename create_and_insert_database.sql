@@ -2,6 +2,7 @@
 -- sudo docker run --name PostgreSQL-DWES -p 5432:5432 -e POSTGRES_DB=futbol -e
 -- POSTGRES_USER=futbol -e POSTGRES_PASSWORD=futbolSimarro -v
 -- ./sql:/var/lib/postgresql/data -d postgres:17.0
+
 COMMIT;
 BEGIN;
 

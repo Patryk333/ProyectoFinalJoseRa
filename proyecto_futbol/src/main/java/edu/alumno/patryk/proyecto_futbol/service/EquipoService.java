@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoEdit;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoInfo;
 import edu.alumno.patryk.proyecto_futbol.model.dto.EquipoList;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasEquipoDto;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasGeneralesDto;
+import edu.alumno.patryk.proyecto_futbol.model.dto.EstadisticasLigaDto;
 import edu.alumno.patryk.proyecto_futbol.model.dto.FiltroBusqueda;
 import edu.alumno.patryk.proyecto_futbol.model.dto.PaginaResponse;
 
@@ -27,5 +30,14 @@ public interface EquipoService {
     public EquipoEdit actualizarEquipo(Long id, EquipoEdit equipoEdit);
 
     public PaginaResponse<EquipoList> findAllPageEquipoList(List<FiltroBusqueda> listaFiltros, Pageable pageable);
+
+    // Métodos para consultas agregadas
+    public EstadisticasGeneralesDto obtenerEstadisticasGenerales();
+    
+    public List<EstadisticasEquipoDto> obtenerEstadisticasEquipos();
+    
+    public List<EstadisticasLigaDto> obtenerEstadisticasPorLiga();
+    
+    public Long obtenerTotalEquipos();
 
 }

@@ -494,6 +494,111 @@ Content-Type: application/json
 ### DOCUMENTOS DE EQUIPOS - VALIDACIONES Y ERRORES
 ### ========================================
 
-### 60. ERROR - Documento no encontrado (DOC_EQUIPO_NOT_FOUND)
+### 60. ERROR - Archivo vacío (BAD_MULTIPART)
 GET {{baseUrl}}/docs/9999999 HTTP/1.1
+Content-Type: application/json
+
+### 61. ERROR - Preview documento inexistente
+GET {{baseUrl}}/docs/preview/9999999 HTTP/1.1
+Content-Type: application/json
+
+### ========================================
+### AUTENTICACIÓN CON JWT
+### ========================================
+
+### VARIABLES
+@authBaseUrl = http://localhost:8090/api/auth
+@secureBaseUrl = http://localhost:8090/api/secure
+
+### 62. REGISTRO DE NUEVO USUARIO
+POST {{authBaseUrl}}/register
+Content-Type: application/json
+
+{
+    "username": "juanperez2",
+    "email": "juan222@example.com",
+    "password": "miPassword123!",
+    "role": "ROLE_USER"
+}
+
+### 63. REGISTRO DE OTRO USUARIO - ADMIN
+POST {{authBaseUrl}}/register
+Content-Type: application/json
+
+{
+    "username": "admin22",
+    "email": "admin22@example.com",
+    "password": "adminPassword123!",
+    "role": "ROLE_ADMIN"
+}
+
+### 64. LOGIN CON CREDENCIALES CORRECTAS
+POST {{authBaseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "juanperez2",
+    "password": "miPassword123!"
+}
+
+### 65. LOGIN CON CREDENCIALES INCORRECTAS
+POST {{authBaseUrl}}/login
+Content-Type: application/json
+
+{
+    "username": "juanpérez",
+    "password": "passwordIncorrecto"
+}
+
+### ========================================
+### ENDPOINTS SECURIZADOS CON JWT
+### Requieren autenticación con token JWT
+### ========================================
+
+### 66. OBTENER PERFIL DEL USUARIO AUTENTICADO - Poner el token que recibas del login o registro
+GET {{secureBaseUrl}}/usuarios/perfil
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluMjIiLCJpYXQiOjE3NzE4NjYxNzEsImV4cCI6MTc3MTkwMjE3MX0.HGajjflsJBswySc8eST5MgMVD4qz9jsO3mCyeal9BjKekMNy9ufTEUdL9z2ZBW8covulAIuc3CMweZETxThs-g
+
+### 67. OBTENER USUARIO POR ID (SECURIZADO)
+GET {{secureBaseUrl}}/usuarios/1
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiUk9MRV9BRE1JTiIsInN1YiI6ImFkbWluMjIiLCJpYXQiOjE3NzE4NjYxNzEsImV4cCI6MTc3MTkwMjE3MX0.HGajjflsJBswySc8eST5MgMVD4qz9jsO3mCyeal9BjKekMNy9ufTEUdL9z2ZBW8covulAIuc3CMweZETxThs-g
+
+### ========================================
+### ENDPOINTS DE CONSULTAS AGREGADAS - JUGADORES
+### ========================================
+
+### 68. Estadísticas de jugadores por posición
+GET http://localhost:8090/api/futbol/jugadores/estadisticas/por-posicion
+Content-Type: application/json
+
+### 69. Estadísticas de jugadores por nacionalidad
+GET http://localhost:8090/api/futbol/jugadores/estadisticas/por-nacionalidad
+Content-Type: application/json
+
+### 70. Total de jugadores
+GET http://localhost:8090/api/futbol/jugadores/estadisticas/total
+Content-Type: application/json
+
+### 71. Promedio de jugadores por equipo
+GET http://localhost:8090/api/futbol/jugadores/estadisticas/promedio-por-equipo
+Content-Type: application/json
+
+### ========================================
+### ENDPOINTS DE CONSULTAS AGREGADAS - EQUIPOS
+### ========================================
+
+### 72. Estadísticas generales del sistema
+GET http://localhost:8090/api/futbol/estadisticas/generales
+Content-Type: application/json
+
+### 73. Estadísticas de jugadores por equipo
+GET http://localhost:8090/api/futbol/estadisticas/equipos
+Content-Type: application/json
+
+### 74. Estadísticas de equipos por liga
+GET http://localhost:8090/api/futbol/estadisticas/ligas
+Content-Type: application/json
+
+### 75. Total de equipos
+GET http://localhost:8090/api/futbol/estadisticas/total-equipos
 Content-Type: application/json
